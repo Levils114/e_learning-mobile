@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import api from './../../services/api';
 
 import {Feather} from '@expo/vector-icons';
+
+import ScreenNavigator from './../../components/ScreenNavigator/';
 
 import {Container,
 		InitialContainer,
@@ -21,7 +25,25 @@ import {Container,
 import logoImg from './../../../assets/Pages/Home/logoImg.png';
 import math from './../../../assets/Pages/Home/math.png';
 
+interface ICourses{
+	id: string;
+	name: string;
+	image: string;
+}
+
 const Home: React.FC = () => {
+	const [courses, setCourses] = useState<ICourses[]>([]);
+
+	useEffect(() => {
+		async function loadApi(){
+			const response = await api.get('/courses');
+
+			setCourses(response.data);
+		}
+
+		loadApi();
+	}, []);
+
 	return(
 		<Container>
 			<InitialContainer>
@@ -41,43 +63,26 @@ const Home: React.FC = () => {
 				/>
 			</SearchInputContainer>
 
-			<CoursesContainer>
+			<CoursesContainer showsVerticalScrollIndicator={false}>
 				<InitialTextsContainer>
 					<CategoriesText>Categorias</CategoriesText>
 
-					<CoursesNumberText>43 cursos</CoursesNumberText>
+					<CoursesNumberText>{courses.length} cursos</CoursesNumberText>
 				</InitialTextsContainer>
 
 				<CoursesCardsContainer>
-					<CourseCard>
-						<CourseImage source={math}/>
+					{courses.map(course => (
+						<CourseCard key={course.id}>
+							<CourseImage source={{uri: course.image}} />
 
-						<CourseName>Matemática</CourseName>
-						<CourseLessonsNumber>16 aulas</CourseLessonsNumber>
-					</CourseCard>
-
-					<CourseCard>
-						<CourseImage source={math}/>
-
-						<CourseName>Matemática</CourseName>
-						<CourseLessonsNumber>16 aulas</CourseLessonsNumber>
-					</CourseCard>
-
-					<CourseCard>
-						<CourseImage source={math}/>
-
-						<CourseName>Matemática</CourseName>
-						<CourseLessonsNumber>16 aulas</CourseLessonsNumber>
-					</CourseCard>
-
-					<CourseCard>
-						<CourseImage source={math}/>
-
-						<CourseName>Matemática</CourseName>
-						<CourseLessonsNumber>16 aulas</CourseLessonsNumber>
-					</CourseCard>
+							<CourseName>{course.name}</CourseName>
+							<CourseLessonsNumber>16 aulas</CourseLessonsNumber>
+						</CourseCard>
+					))}
 				</CoursesCardsContainer>
 			</CoursesContainer>
+
+			<ScreenNavigator whereIm="home"/>
 		</Container>
 	);
 };

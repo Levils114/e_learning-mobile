@@ -44,7 +44,7 @@ export const SearchInput = styled.TextInput`
 	margin-left: 12px;
 `;
 
-export const CoursesContainer = styled.View`
+export const CoursesContainer = styled.ScrollView`
 	width: 100%;
 
 	flex: 1;
@@ -82,22 +82,29 @@ export const CoursesNumberText = styled.Text`
 `;
 
 export const CoursesCardsContainer = styled.View`
+	width: 100%;
+
 	padding: 0 18px;
 
 	margin: 26px auto 0;
+
+	flex-direction: row;
 
 	flex-wrap: wrap;
 `;
 
 export const CourseCard = styled.View`
-	align-items: flex-start;
-	justify-content: flex-start;
-
-	padding: 26px 52px 26px 24px;
+	padding: 18px 40px 26px 18px;
 
 	background: #FFFFFF;
 
-	margin: 0 12px 12px 0;
+	align-items: flex-start;
+	justify-content: flex-start;
+
+	width: 156px;
+	height: 172px;
+
+	margin: 0 6px 16px 0;
 
 	border-radius: 24px;
 `;
@@ -108,7 +115,9 @@ export const CourseImage = styled.Image`
 `;
 
 export const CourseName = styled.Text`
-	margin: 18px 0 2px;
+	width: 80%;
+
+	margin: 18px 0 2px 8px;
 
 	font-size: 15px;
 	font-weight: 400;
@@ -121,4 +130,6 @@ export const CourseLessonsNumber = styled.Text`
 	font-weight: 400;
 	font-family: 'Roboto';
 	color: #C4C4D1;
+
+	margin-left: 8px;
 `;
