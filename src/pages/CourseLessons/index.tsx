@@ -66,6 +66,16 @@ const CourseLessons: React.FC = () => {
 
 			const response = await api.get(`/courses/${params.course_id}/lessons`);
 
+			const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
+
+			if(!!savedCourses){
+				const checkIfCourseIsSaved = JSON.parse(savedCourses).find((course: ICourse) => course.id === response.data.course.id);
+			
+				if(!!checkIfCourseIsSaved){
+					setIsFavorite(true);
+				}
+			}
+
 			setCourse(response.data);
 			setLoading(false);
 		}
@@ -75,28 +85,34 @@ const CourseLessons: React.FC = () => {
 
 	const handleFavorite = useCallback(async() => {
 		const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
-
-		console.log(JSON.parse(savedCourses));
 		
-		if(!savedCourses){
-			const formatData = [course.course];
+		if(JSON.parse(savedCourses).length === 0){
+			const formatData = {...course.course, lessonsInCourse: course.lessons.length};
+			const dataToSave = [formatData]
 
-			//console.log(JSON.stringify(formatData));
-
-			await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(formatData));
+			await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(dataToSave));
 		}
 
-		if(!!savedCourses){
+		if(JSON.parse(savedCourses).length >= 1){
 			const formatSavedCourses = JSON.parse(savedCourses);
-			formatSavedCourses.push(course.course);
 
-			await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(formatSavedCourses));
+			if(!isFavorite){
+				formatSavedCourses.push({...course.course, lessonsInCourse: course.lessons.length});
+
+				await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(formatSavedCourses));
+			}
+
+			if(!!isFavorite){
+				const deleteSavedFromCourse = formatSavedCourses.filter((courseFinded: ICourse) => courseFinded.id !== course.course.id);
+
+				await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(deleteSavedFromCourse));
+			}
 		}
 
 		//await AsyncStorage.removeItem('@e_learning:saved-courses');
 
 		setIsFavorite(!isFavorite);
-	}, [isFavorite]);
+	}, [isFavorite, course]);
 
 	return(
 		<Container>
