@@ -6,6 +6,8 @@ export const Container = styled.View`
 	justify-content: flex-start;
 
 	background: #6548A3;
+
+	padding-bottom: 52px;
 `;
 
 export const InitialContainer = styled.View`
@@ -93,7 +95,7 @@ export const CoursesCardsContainer = styled.View`
 	flex-wrap: wrap;
 `;
 
-export const CourseCard = styled.View`
+export const CourseCard = styled.TouchableOpacity`
 	padding: 18px 40px 26px 18px;
 
 	background: #FFFFFF;
@@ -117,7 +119,7 @@ export const CourseImage = styled.Image`
 export const CourseName = styled.Text`
 	width: 80%;
 
-	margin: 18px 0 2px 8px;
+	margin: 18px 0 2px 0;
 
 	font-size: 15px;
 	font-weight: 400;
@@ -130,6 +132,4 @@ export const CourseLessonsNumber = styled.Text`
 	font-weight: 400;
 	font-family: 'Roboto';
 	color: #C4C4D1;
-
-	margin-left: 8px;
 `;

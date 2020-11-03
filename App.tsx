@@ -1,15 +1,18 @@
 import React from 'react';
 import { View, StatusBar } from 'react-native';
 
-//import Introdution from './src/pages/Introdution/';
+import { NavigationContainer } from '@react-navigation/native';
 
-import Home from './src/pages/Home/';
+import Routes from './src/routes/';
 
 export default function App() {
   return (
     <View style={{flex: 1}}>
       <StatusBar backgroundColor="#6548A3" barStyle="light-content"/>
-      <Home />
+
+      <NavigationContainer>
+      	<Routes />
+      </NavigationContainer>	
     </View>
   );
 }

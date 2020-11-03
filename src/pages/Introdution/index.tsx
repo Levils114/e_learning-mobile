@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useNavigation } from '@react-navigation/native';
+
 import {Container,
 		BackgroundImage,
 		PersonImage,
@@ -12,6 +14,8 @@ import backgroundImage from './../../../assets/Pages/Introdution/e_learningLogo.
 import personImage from './../../../assets/Pages/Introdution/personImg.png';
 
 const Introdution: React.FC = () => {
+	const navigation = useNavigation();
+
 	return(
 		<Container>
 			<BackgroundImage source={backgroundImage}>
@@ -20,7 +24,7 @@ const Introdution: React.FC = () => {
 				<Title>Aprenda da melhor forma</Title>
 				<Description>Entre na plataforma e acesse cursos de diversas áreas de conhecimento.</Description>
 			
-				<StartButton>
+				<StartButton onPress={() => navigation.navigate('home')}>
 					<StartButtonText>Começar os estudos</StartButtonText>
 				</StartButton>
 			</BackgroundImage>

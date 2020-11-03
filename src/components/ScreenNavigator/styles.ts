@@ -13,9 +13,14 @@ export const Container = styled.View`
 	flex-direction: row;
 
 	background: #FFF;
+
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 2;
 `;
 
-export const HomeContainer = styled.View<ITextAndBorderColors>`
+export const HomeContainer = styled.TouchableOpacity<ITextAndBorderColors>`
 	flex-direction: row;
 
 	align-items: center;
@@ -34,7 +39,7 @@ export const HomeText = styled.Text<ITextAndBorderColors>`
 	color: ${props => props.whereIm === 'home' ? '#FF6680' : '#C4C4D1'};
 `;
 
-export const SavedCoursesContainer = styled.View<ITextAndBorderColors>`
+export const SavedCoursesContainer = styled.TouchableOpacity<ITextAndBorderColors>`
 	flex-direction: row;
 
 	align-items: center;
