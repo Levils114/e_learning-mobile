@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {Feather} from '@expo/vector-icons';
 
+import ModalToRemoveSave from './../../components/ModalToRemoveSave/';
 import ScreenNavigator from './../../components/ScreenNavigator/';
 
 import { useNavigation } from '@react-navigation/native';
@@ -44,6 +45,11 @@ const SavedCourses: React.FC = () => {
 
 	const [coursesToSearch, setCoursesToSearch] = useState('');
 
+	const [courseID, setCourseID] = useState('');
+	const [courseName, setCourseName] = useState('');
+
+	const [openModalToRemoveSave, setOpenModalToRemoveSave] = useState(false);
+
 	useEffect(() => {
 		async function loadApi(){
 			const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
@@ -54,7 +60,7 @@ const SavedCourses: React.FC = () => {
 		}
 
 		loadApi();
-	}, []);
+	}, [courseID]);
 
 	const searchCourses = useCallback(() => {
 		const coursesFinded = courses.filter(course => {
@@ -64,8 +70,41 @@ const SavedCourses: React.FC = () => {
 		setCoursesSearched(coursesFinded);
 	}, [coursesToSearch]);
 
+	const handleRemoveSave = useCallback(async(course_id: string) => {
+		const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
+
+		if(!!savedCourses){
+			const removeCourse = JSON.parse(savedCourses).filter((course: ICourses) => course.id !== course_id);
+
+			await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(removeCourse));
+		}
+		
+		setCourseID('');
+		setCourseName('');
+		setOpenModalToRemoveSave(false);
+	}, []);
+
+	const handleOpenModalToRemoveSave = useCallback((course_name: string, course_id: string) => {
+		setCourseID(course_id);
+		setCourseName(course_name);
+		setOpenModalToRemoveSave(true);
+	}, []);
+
+	const handleCloseModalToRemoveSave = useCallback(() => {
+		setOpenModalToRemoveSave(false);
+	}, []);
+
 	return(
 		<Container>
+
+			{!!openModalToRemoveSave && (
+				<ModalToRemoveSave 
+					course_name={courseName} 
+					functionToCloseModal={handleCloseModalToRemoveSave}
+					functionToRemoveSave={() => handleRemoveSave(courseID)}
+				/>
+			)}
+
 			<InitialContainer>
 				<LogoImage source={logoImg}/>
 
@@ -101,7 +140,7 @@ const SavedCourses: React.FC = () => {
 							<CourseImageAndExcludeOptionContainer>
 								<CourseImage source={{uri: course.image}} />
 
-								<ButtonToRemoveSave>
+								<ButtonToRemoveSave onPress={() => handleOpenModalToRemoveSave(course.name, course.id)}>
 									<Feather name="trash" color="#C4C4D1" size={24}/>
 								</ButtonToRemoveSave>
 							</CourseImageAndExcludeOptionContainer>
