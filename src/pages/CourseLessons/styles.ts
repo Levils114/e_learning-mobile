@@ -76,7 +76,7 @@ export const LessonsNumber = styled.Text`
 	margin-left: auto;
 `;
 
-export const LessonContainer = styled.View`
+export const LessonContainer = styled.TouchableOpacity`
 	background: #FFFFFF;
 
 	border-radius: 16px;

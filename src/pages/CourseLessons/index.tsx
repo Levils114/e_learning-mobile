@@ -44,6 +44,7 @@ interface ILessons{
 	id: string;
 	duration: number;
 	name: string;
+	video_id: string;
 }
 
 interface IApiResult{
@@ -137,7 +138,7 @@ const CourseLessons: React.FC = () => {
 					</CourseInformationsContainer>
 
 					{course.lessons.map((lesson, index) => (
-						<LessonContainer key={lesson.id}>
+						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id })}>
 							<PlayerContainer>
 								<Feather  
 									name="play" 
