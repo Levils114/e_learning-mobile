@@ -87,15 +87,15 @@ const CourseLessons: React.FC = () => {
 	const handleFavorite = useCallback(async() => {
 		const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
 		
-		if(JSON.parse(savedCourses).length === 0){
+		if(JSON.parse(String(savedCourses)).length === 0){
 			const formatData = {...course.course, lessonsInCourse: course.lessons.length};
 			const dataToSave = [formatData]
 
 			await AsyncStorage.setItem('@e_learning:saved-courses', JSON.stringify(dataToSave));
 		}
 
-		if(JSON.parse(savedCourses).length >= 1){
-			const formatSavedCourses = JSON.parse(savedCourses);
+		if(JSON.parse(String(savedCourses)).length >= 1){
+			const formatSavedCourses = JSON.parse(String(savedCourses));
 
 			if(!isFavorite){
 				formatSavedCourses.push({...course.course, lessonsInCourse: course.lessons.length});
@@ -138,7 +138,7 @@ const CourseLessons: React.FC = () => {
 					</CourseInformationsContainer>
 
 					{course.lessons.map((lesson, index) => (
-						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id })}>
+						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id, lesson_index: index + 1 })}>
 							<PlayerContainer>
 								<Feather  
 									name="play" 

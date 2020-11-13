@@ -37,7 +37,7 @@ export const SearchInputContainer = styled.View`
 
 	background: #FFFFFF;
 
-	padding: 12px;
+	padding: 4px 12px;
 
 	border-radius: 32px;
 `;
