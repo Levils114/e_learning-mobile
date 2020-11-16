@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import YoutubePlayer from 'react-native-youtube';
 
 import api from './../../services/api';
@@ -38,6 +40,7 @@ interface IParams{
 }
 
 interface ILesson{
+	id: string;
 	name: string;
 	description: string;
 	duration: number;
@@ -52,6 +55,14 @@ const Lesson: React.FC = () => {
 	useEffect(() => {
 		async function loadApi(){
 			const response = await api.get(`/lessons/${params.lesson_id}`);
+
+			const courseLessons = await AsyncStorage.getItem('@e_learning:course_lessons');
+
+			if(!!courseLessons){
+				const indexFromLesson = JSON.parse(courseLessons).map((lesson: ILesson) => lesson.id).indexOf(params.lesson_id);
+
+				console.log(indexFromLesson);
+			}
 
 			setLessons(response.data);
 		}

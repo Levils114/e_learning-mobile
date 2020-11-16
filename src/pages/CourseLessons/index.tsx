@@ -77,6 +77,8 @@ const CourseLessons: React.FC = () => {
 				}
 			}
 
+			await AsyncStorage.setItem('@e_learning:course_lessons', JSON.stringify(response.data.lessons));
+
 			setCourse(response.data);
 			setLoading(false);
 		}
