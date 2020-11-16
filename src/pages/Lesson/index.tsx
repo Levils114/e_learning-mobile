@@ -16,7 +16,12 @@ import {Container,
 		NumberText,
 		LessonTimeContainer,
 		TimeText,
-		LessonDescriptionText} from './styles';
+		LessonDescriptionText,
+		PreviousAndNextLessonContainer,
+		PreviousButtonContainer,
+		PreviousButtonText,
+		NextButtonContainer,
+		NextButtonText} from './styles';
 
 import { useRoute, useNavigation } from '@react-navigation/native';
 
@@ -69,6 +74,7 @@ const Lesson: React.FC = () => {
 				videoId={params.video_id}
 				play={false}
 				style={{ height: 200, width: '100%' }}
+				getCurrentTime={(e: any) => console.log(e)}
 			/>
 
 			<LessonInformationsContainer>
@@ -86,6 +92,18 @@ const Lesson: React.FC = () => {
 
 				<LessonDescriptionText>{lesson.description}</LessonDescriptionText>
 			</LessonInformationsContainer>
+
+			<PreviousAndNextLessonContainer>
+				<PreviousButtonContainer>
+					<Feather name="arrow-left" size={20} color="#FF6680"/>
+					<PreviousButtonText>Aula anterior</PreviousButtonText>
+				</PreviousButtonContainer>
+
+				<NextButtonContainer>
+					<NextButtonText>Próxima aula</NextButtonText>
+					<Feather name="arrow-right" size={20} color="#FFFFFF"/>
+				</NextButtonContainer>
+			</PreviousAndNextLessonContainer>
 		</Container>
 	);
 };

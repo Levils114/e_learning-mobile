@@ -7,6 +7,8 @@ export const Container = styled.View`
 	flex: 1;
 
 	background: #6548A3;
+
+	position: relative;
 `;
 
 export const SaveButton = styled.TouchableOpacity`
@@ -87,4 +89,59 @@ export const LessonDescriptionText = styled.Text`
 	font-weight: 400;
 	font-family: 'Roboto';
 	color: #6C6C80;
+`;
+
+export const PreviousAndNextLessonContainer = styled.View`
+	width: 100%;
+
+	padding: 12px 0;
+
+	background: #F0EDF5;
+
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: row;
+`;
+
+export const PreviousButtonContainer = styled.TouchableOpacity`
+	margin: 0 auto 0 32px;
+
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: row;
+`;
+
+export const PreviousButtonText = styled.Text`
+	margin-left: 4px;
+
+	font-size: 15px;
+	font-weight: 400;
+	font-family: 'Roboto';
+	color: #FF6680;
+`;
+
+export const NextButtonContainer = styled.TouchableOpacity`
+	margin: 0 32px 0 auto;
+
+	padding: 16px;
+
+	border-radius: 40px;
+
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: row;
+
+	background: #FF6680;
+`;
+
+export const NextButtonText = styled.Text`
+	margin-right: 4px;
+
+	font-size: 15px;
+	font-weight: 400;
+	font-family: 'Roboto';
+	color: #FFFFFF;
 `;
