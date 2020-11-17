@@ -1,4 +1,9 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
+
+interface IPreviosAndNextButton{
+	isTheFirst?: boolean;
+	isTheLast?: boolean;
+}
 
 export const Container = styled.View`
 	align-items: flex-start;
@@ -94,7 +99,7 @@ export const LessonDescriptionText = styled.Text`
 export const PreviousAndNextLessonContainer = styled.View`
 	width: 100%;
 
-	padding: 12px 0;
+	padding: 16px 0;
 
 	background: #F0EDF5;
 
@@ -104,8 +109,14 @@ export const PreviousAndNextLessonContainer = styled.View`
 	flex-direction: row;
 `;
 
-export const PreviousButtonContainer = styled.TouchableOpacity`
+export const PreviousButtonContainer = styled.TouchableOpacity<IPreviosAndNextButton>`
+	${props => !!props.isTheFirst && css`
+		display: none;
+	`}
+
 	margin: 0 auto 0 32px;
+
+	padding: 16px;
 
 	align-items: center;
 	justify-content: center;
@@ -122,8 +133,12 @@ export const PreviousButtonText = styled.Text`
 	color: #FF6680;
 `;
 
-export const NextButtonContainer = styled.TouchableOpacity`
-	margin: 0 32px 0 auto;
+export const NextButtonContainer = styled.TouchableOpacity<IPreviosAndNextButton>`
+	${props => !!props.isTheLast && css`
+		display: none;
+	`}
+
+	margin: ${props => !!props.isTheFirst ? "0 -42.5% 0 auto" : "0 32px 0 auto"};
 
 	padding: 16px;
 

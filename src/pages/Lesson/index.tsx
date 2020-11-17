@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -41,16 +41,25 @@ interface IParams{
 
 interface ILesson{
 	id: string;
+	video_id: string;
 	name: string;
 	description: string;
 	duration: number;
 }
 
 const Lesson: React.FC = () => {
+	const videoRef = useRef<YoutubePlayer>(null);
+
 	const { params } = useRoute<IParams>();
 	const navigation = useNavigation();
 
 	const [lesson, setLessons] = useState({} as ILesson);
+
+	const [readyToLoad, setReadyToLoad] = useState(false);
+
+	const [courseLessons, setCourseLessons] = useState<ILesson[]>([]);
+
+	const [currentTime, setCurrentTime] = useState(0);
 
 	useEffect(() => {
 		async function loadApi(){
@@ -59,16 +68,29 @@ const Lesson: React.FC = () => {
 			const courseLessons = await AsyncStorage.getItem('@e_learning:course_lessons');
 
 			if(!!courseLessons){
-				const indexFromLesson = JSON.parse(courseLessons).map((lesson: ILesson) => lesson.id).indexOf(params.lesson_id);
-
-				console.log(indexFromLesson);
+				setCourseLessons(JSON.parse(courseLessons));
 			}
 
 			setLessons(response.data);
 		}
 
 		loadApi();
-	}, []);
+	}, [params]);
+
+	useEffect(() => {
+		async function loadVideoInformations(){
+			const videoCurrentTime = await videoRef.current?.getCurrentTime();
+
+			setCurrentTime(!!videoCurrentTime ? videoCurrentTime : 0);
+			//console.log(videoCurrentTime);
+		}
+
+		if(!!readyToLoad){
+			loadVideoInformations();
+		}
+	}, [readyToLoad, videoRef]);
+
+	console.log(currentTime);
 
 	return(
 		<Container>
@@ -81,18 +103,20 @@ const Lesson: React.FC = () => {
 			</InitialContainer>
 
 			<YoutubePlayer 
+				ref={videoRef}
 				apiKey={`${informations.extra.youtube_api_key}`}
 				videoId={params.video_id}
 				play={false}
 				style={{ height: 200, width: '100%' }}
-				getCurrentTime={(e: any) => console.log(e)}
+				onReady={() => setReadyToLoad(true)}
+				onChangeState={e => console.log(e)}
 			/>
 
 			<LessonInformationsContainer>
 				<LessonTitle>{lesson.name}</LessonTitle>
 
 				<LessonNumberAndTimeContainer>
-					<NumberText>Aula {params.lesson_index}</NumberText>
+					<NumberText>Aula {params.lesson_index + 1}</NumberText>
 
 					<LessonTimeContainer>
 						<Feather name="clock" color="#A0A0B2" size={16}/>
@@ -105,12 +129,19 @@ const Lesson: React.FC = () => {
 			</LessonInformationsContainer>
 
 			<PreviousAndNextLessonContainer>
-				<PreviousButtonContainer>
+				<PreviousButtonContainer 
+					isTheFirst={params.lesson_index - 1 === -1} 
+					onPress={() => navigation.navigate('lesson', { lesson_id: courseLessons[params.lesson_index - 1].id, video_id: courseLessons[params.lesson_index - 1].video_id, lesson_index: params.lesson_index - 1 })}
+				> 
 					<Feather name="arrow-left" size={20} color="#FF6680"/>
 					<PreviousButtonText>Aula anterior</PreviousButtonText>
 				</PreviousButtonContainer>
 
-				<NextButtonContainer>
+				<NextButtonContainer 
+					isTheLast={params.lesson_index + 1 === courseLessons.length} 
+					isTheFirst={params.lesson_index - 1 === -1} 
+					onPress={() => navigation.navigate('lesson', { lesson_id: courseLessons[params.lesson_index + 1].id, video_id: courseLessons[params.lesson_index + 1].video_id, lesson_index: params.lesson_index + 1 })}
+				>
 					<NextButtonText>Próxima aula</NextButtonText>
 					<Feather name="arrow-right" size={20} color="#FFFFFF"/>
 				</NextButtonContainer>

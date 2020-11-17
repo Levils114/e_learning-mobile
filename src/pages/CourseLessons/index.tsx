@@ -140,7 +140,7 @@ const CourseLessons: React.FC = () => {
 					</CourseInformationsContainer>
 
 					{course.lessons.map((lesson, index) => (
-						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id, lesson_index: index + 1 })}>
+						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id, lesson_index: index })}>
 							<PlayerContainer>
 								<Feather  
 									name="play" 
