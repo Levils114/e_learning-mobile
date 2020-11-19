@@ -46,7 +46,7 @@ export const SearchInput = styled.TextInput`
 	margin-left: 12px;
 `;
 
-export const CoursesContainer = styled.ScrollView`
+export const CoursesContainer = styled.View`
 	width: 100%;
 
 	flex: 1;

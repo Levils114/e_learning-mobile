@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {Container,
 		BackgroundImage,
@@ -16,6 +18,14 @@ import personImage from './../../../assets/Pages/Introdution/personImg.png';
 const Introdution: React.FC = () => {
 	const navigation = useNavigation();
 
+	const handleNavigateToHome = useCallback(async() => {
+		const firstTime = 'yes';
+
+		await AsyncStorage.setItem('@e_learning:first-time', firstTime);
+
+		navigation.navigate('home');
+	}, [navigation]);
+
 	return(
 		<Container>
 			<BackgroundImage source={backgroundImage}>
@@ -24,7 +34,7 @@ const Introdution: React.FC = () => {
 				<Title>Aprenda da melhor forma</Title>
 				<Description>Entre na plataforma e acesse cursos de diversas áreas de conhecimento.</Description>
 			
-				<StartButton onPress={() => navigation.navigate('home')}>
+				<StartButton onPress={handleNavigateToHome}>
 					<StartButtonText>Começar os estudos</StartButtonText>
 				</StartButton>
 			</BackgroundImage>
