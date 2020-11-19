@@ -106,7 +106,7 @@ export const CourseCard = styled.TouchableOpacity`
 	width: 156px;
 	height: 172px;
 
-	margin: 0 6px 16px 0;
+	margin: 0 6.2% 16px 0;
 
 	border-radius: 24px;
 `;

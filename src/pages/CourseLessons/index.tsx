@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
+import { FlatList } from 'react-native';
+
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import api from './../../services/api';
@@ -32,6 +34,7 @@ import logoImg from './../../../assets/Pages/Home/Logotipo.png';
 interface IParams{
 	params: {
 		course_id: string;
+		isToRefresh: boolean;
 	}
 }
 
@@ -45,9 +48,10 @@ interface ILessons{
 	duration: number;
 	name: string;
 	video_id: string;
+	is_completed: number;
 }
 
-interface IApiResult{
+export interface IApiResult{
 	course: ICourse;
 	lessons: ILessons[];
 }
@@ -59,6 +63,8 @@ const CourseLessons: React.FC = () => {
 	const [course, setCourse] = useState({} as IApiResult);
 	const [loading, setLoading] = useState(true);
 
+	const [lessonsCompleted, setLessonsCompleted] = useState('');
+
 	const [isFavorite, setIsFavorite] = useState(false);
 
 	useEffect(() => {
@@ -68,6 +74,12 @@ const CourseLessons: React.FC = () => {
 			const response = await api.get(`/courses/${params.course_id}/lessons`);
 
 			const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
+
+			const lessonsSaved = await AsyncStorage.getItem('@e_learning:lessons-completed');
+
+			if(lessonsSaved !== null){
+				setLessonsCompleted(lessonsSaved);
+			}
 
 			if(!!savedCourses){
 				const checkIfCourseIsSaved = JSON.parse(savedCourses).find((course: ICourse) => course.id === response.data.course.id);
@@ -84,12 +96,12 @@ const CourseLessons: React.FC = () => {
 		}
 
 		loadApi();
-	}, []);
+	}, [params]);
 
 	const handleFavorite = useCallback(async() => {
 		const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');
 		
-		if(JSON.parse(String(savedCourses)).length === 0){
+		if(savedCourses === null || JSON.parse(String(savedCourses)).length === 0){
 			const formatData = {...course.course, lessonsInCourse: course.lessons.length};
 			const dataToSave = [formatData]
 
@@ -139,31 +151,39 @@ const CourseLessons: React.FC = () => {
 						<LessonsNumber>{course.lessons.length} Aulas</LessonsNumber>
 					</CourseInformationsContainer>
 
-					{course.lessons.map((lesson, index) => (
-						<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id, lesson_index: index })}>
-							<PlayerContainer>
-								<Feather  
-									name="play" 
-									color="#FFFFFF" 
-									size={24}/>
-							</PlayerContainer>
+					<FlatList
+						data={course.lessons}
+						keyExtractor={course => course.id}
+						showsVerticalScrollIndicator={false}
+						renderItem={({ item: lesson, index }) => (
+							<LessonContainer key={lesson.id} onPress={() => navigation.navigate('lesson', { lesson_id: lesson.id, video_id: lesson.video_id, lesson_index: index })}>
+								<PlayerContainer is_completed={!!lessonsCompleted.includes(lesson.id)}>
+									<Feather  
+										name="play" 
+										color="#FFFFFF" 
+										size={24}/>
+								</PlayerContainer>
 
-							<LessonName>{lesson.name}</LessonName>
+								<LessonName>{lesson.name}</LessonName>
 
-							<LessonInfomationsContainer>
-								<LessonNumber>Aula {index + 1}</LessonNumber>
+								<LessonInfomationsContainer>
+									<LessonNumber>Aula {index + 1}</LessonNumber>
 
-								<LessonTimeConatainer>
-									<Feather name="clock" color="#C4C4D1" size={12}/>
-									<LessonTimeText>{parseInt(String(lesson.duration/60))} min</LessonTimeText>
-								</LessonTimeConatainer>
+									<LessonTimeConatainer>
+										<Feather name="clock" color="#C4C4D1" size={12}/>
+										<LessonTimeText>{parseInt(String(lesson.duration/60))} min</LessonTimeText>
+									</LessonTimeConatainer>
 
-								<LessonCompleteContainer>
-									<LessonCompleteText>Completo</LessonCompleteText>
-								</LessonCompleteContainer>
-							</LessonInfomationsContainer>
-						</LessonContainer>
-					))}
+									{!!lessonsCompleted.includes(lesson.id) && (
+										<LessonCompleteContainer>
+											<LessonCompleteText>Completo</LessonCompleteText>
+										</LessonCompleteContainer>
+									)}
+								</LessonInfomationsContainer>
+							</LessonContainer>
+						)}
+					/>
+						
 					</>
 				)}
 			</LessonsContainer>

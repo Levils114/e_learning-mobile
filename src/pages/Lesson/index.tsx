@@ -42,9 +42,14 @@ interface IParams{
 interface ILesson{
 	id: string;
 	video_id: string;
+	is_completed: number;
 	name: string;
 	description: string;
 	duration: number;
+}
+
+interface IYoutubeEvent{
+	state: string;
 }
 
 const Lesson: React.FC = () => {
@@ -55,11 +60,7 @@ const Lesson: React.FC = () => {
 
 	const [lesson, setLessons] = useState({} as ILesson);
 
-	const [readyToLoad, setReadyToLoad] = useState(false);
-
 	const [courseLessons, setCourseLessons] = useState<ILesson[]>([]);
-
-	const [currentTime, setCurrentTime] = useState(0);
 
 	useEffect(() => {
 		async function loadApi(){
@@ -77,25 +78,24 @@ const Lesson: React.FC = () => {
 		loadApi();
 	}, [params]);
 
-	useEffect(() => {
-		async function loadVideoInformations(){
-			const videoCurrentTime = await videoRef.current?.getCurrentTime();
+	const handleCompleteLesson = useCallback(async(e: IYoutubeEvent) => {
+		const lessonsCompleted = await AsyncStorage.getItem('@e_learning:lessons-completed');
 
-			setCurrentTime(!!videoCurrentTime ? videoCurrentTime : 0);
-			//console.log(videoCurrentTime);
+		if(e.state === 'ended'){
+			if(lessonsCompleted === null || JSON.parse(lessonsCompleted).length === 0){
+				await AsyncStorage.setItem('@e_learning:lessons-completed', JSON.stringify([params.lesson_id]))
+			}
+
+			if(lessonsCompleted !== null && JSON.parse(lessonsCompleted).length >= 1){
+				await AsyncStorage.setItem('@e_learning:lessons-completed', JSON.stringify([...JSON.parse(lessonsCompleted), params.lesson_id]))
+			}
 		}
-
-		if(!!readyToLoad){
-			loadVideoInformations();
-		}
-	}, [readyToLoad, videoRef]);
-
-	console.log(currentTime);
+	}, [params.lesson_id]);
 
 	return(
 		<Container>
 			<InitialContainer>
-				<BackButton onPress={() => navigation.goBack()}>
+				<BackButton onPress={() => navigation.navigate('courseLessons', { isToRefresh: true })}>
 					<Feather name="arrow-left" color="#FF6680" size={24}/>
 				</BackButton>
 
@@ -108,8 +108,7 @@ const Lesson: React.FC = () => {
 				videoId={params.video_id}
 				play={false}
 				style={{ height: 200, width: '100%' }}
-				onReady={() => setReadyToLoad(true)}
-				onChangeState={e => console.log(e)}
+				onChangeState={handleCompleteLesson}
 			/>
 
 			<LessonInformationsContainer>

@@ -1,5 +1,9 @@
 import styled from 'styled-components/native';
 
+interface IPlayerContainer{
+	is_completed: boolean;
+}
+
 export const Container = styled.View`
 	align-items: flex-start;
 	justify-content: flex-start;
@@ -34,9 +38,6 @@ export const LogoImage = styled.Image`
 export const LessonsContainer = styled.View`
 	width: 100%;
 	flex: 1;
-
-	align-items: flex-end;
-	justify-content: flex-start;
 
 	flex-direction: column;
 
@@ -77,6 +78,10 @@ export const LessonsNumber = styled.Text`
 `;
 
 export const LessonContainer = styled.TouchableOpacity`
+	align-self: flex-end;
+
+	width: 90%;
+
 	background: #FFFFFF;
 
 	border-radius: 16px;
@@ -88,10 +93,10 @@ export const LessonContainer = styled.TouchableOpacity`
 	position: relative;
 `;
 
-export const PlayerContainer = styled.View`
+export const PlayerContainer = styled.View<IPlayerContainer>`
 	padding: 20px 20px 20px 24px;
 
-	background: #61C5BD;
+	background: ${props => !!props.is_completed ? '#61C5BD' : '#FF6680'};
 
 	border-radius: 16px;
 
