@@ -19,7 +19,8 @@ e.learning é uma aplicação mobile, com o objetivo de fornecer cursos de varia
   - ⚠️ Requisitos:
     - Baixar e execurtar a [API do e.learning](https://github.com/Levils114/e_learning-back-end).
     - Ter instalado em sua máquina o [node](https://nodejs.org/pt-br/).
-    - Ter instalado em sua máquina o Android Studio ou Xcode (caso não saiba como instalar o Android Studio, basta seguir [esse tutorial](https://react-native.rocketseat.dev/)
+    - Ter instalado em sua máquina o Android Studio ou Xcode (caso não saiba como instalar o Android Studio, basta seguir [esse tutotial](https://react-native.rocketseat.dev/))
+    - Possuir chave de API da google (caso não possua, basta seguir [esta documentação](https://developers.google.com/youtube/registering_an_application?hl=pt_br))
 
   - Depois de ter baixado a API e ela já estar rodando, você deve baixar esse repositório e na pasta em que você baixou, pelo terminal, execute o seguinte comando para baixar todas as dependências necessárias:
 
@@ -30,6 +31,15 @@ e.learning é uma aplicação mobile, com o objetivo de fornecer cursos de varia
     ```sh
      yarn
     ```
+
+  - Agora na pasta que você baixou, crie um arquivo chamado ```env.json``` e digite o seguinte código:
+      ```json
+      {
+        "extra": {
+           "youtube_api_key": "coloque sua chave de API aqui"
+        }
+    }
+      ```
 
   - Agora basta usar o comando abaixo e aproveitar a aplicação 😁 
   
