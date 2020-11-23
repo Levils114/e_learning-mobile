@@ -94,6 +94,12 @@ const SavedCourses: React.FC = () => {
 		setOpenModalToRemoveSave(false);
 	}, []);
 
+	const handleLogout = useCallback(async() => {
+		await AsyncStorage.setItem('@e_learning:first-time', 'no');
+
+		navigation.navigate('introdution');
+	}, []);
+
 	return(
 		<Container>
 
@@ -108,7 +114,7 @@ const SavedCourses: React.FC = () => {
 			<InitialContainer>
 				<LogoImage source={logoImg}/>
 
-				<ButtonToLogout>
+				<ButtonToLogout onPress={handleLogout}>
 					<Feather name="power" color="#FF6680" size={24}/>
 				</ButtonToLogout>
 			</InitialContainer>

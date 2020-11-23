@@ -69,8 +69,6 @@ const CourseLessons: React.FC = () => {
 
 	useEffect(() => {
 		async function loadApi(){
-			api.defaults.headers.mac_address = 'test';
-
 			const response = await api.get(`/courses/${params.course_id}/lessons`);
 
 			const savedCourses = await AsyncStorage.getItem('@e_learning:saved-courses');

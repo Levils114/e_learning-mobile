@@ -23,7 +23,7 @@ const Routes: React.FC = () => {
 		async function checkFirstTime(){
 			const checkIfIsTheFirstTime = await AsyncStorage.getItem('@e_learning:first-time');
 
-			if(checkIfIsTheFirstTime === null){
+			if(checkIfIsTheFirstTime === null || checkIfIsTheFirstTime === 'no'){
 				setIsFirstTime(true);
 			} else{
 				setIsFirstTime(false);

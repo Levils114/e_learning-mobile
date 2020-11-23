@@ -6,7 +6,7 @@ import {Feather} from '@expo/vector-icons';
 
 import ScreenNavigator from './../../components/ScreenNavigator/';
 
-import { useNavigation } from '@react-navigation/native';
+import { NavigationHelpersContext, useNavigation } from '@react-navigation/native';
 
 import {Container,
 		InitialContainer,
@@ -26,6 +26,7 @@ import {Container,
 
 import logoImg from './../../../assets/Pages/Home/Logotipo.png';
 import math from './../../../assets/Pages/Home/math.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ICourses{
 	id: string;
@@ -60,12 +61,18 @@ const Home: React.FC = () => {
 		setCoursesSearched(coursesFinded);
 	}, [coursesToSearch]);
 
+	const handleLogout = useCallback(async() => {
+		await AsyncStorage.setItem('@e_learning:first-time', 'no');
+
+		navigation.navigate('introdution');
+	}, []);
+
 	return(
 		<Container>
 			<InitialContainer>
 				<LogoImage source={logoImg}/>
 
-				<ButtonToLogout>
+				<ButtonToLogout onPress={handleLogout}>
 					<Feather name="power" color="#FF6680" size={24}/>
 				</ButtonToLogout>
 			</InitialContainer>
